@@ -20,3 +20,4 @@ Thumbs.db
 # IDE / Editor
 .idea/
 .vscode/
+/venv/
