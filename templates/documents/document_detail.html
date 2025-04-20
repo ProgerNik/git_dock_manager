@@ -1,0 +1,53 @@
+{# Путь: templates/documents/document_detail.html #}
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ document.title }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Главная</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'document_list' %}">Документы</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ document.title|truncatechars:50 }}</li>
+  </ol>
+</nav>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+         <h1 class="h3 mb-0">{{ document.title }}</h1>
+         {% if perms.documents.can_edit_document or perms.documents.can_delete_document %}
+            <div>
+                {% if perms.documents.can_edit_document %}
+                    <a href="{% url 'document_edit' document.pk %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-pencil-fill"></i> Редактировать</a>
+                {% endif %}
+                {% if perms.documents.can_delete_document %}
+                    <a href="{% url 'document_delete' document.pk %}" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash-fill"></i> Удалить</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="text-muted fst-italic mb-3 pb-3 border-bottom">
+            <small>
+                <i class="bi bi-calendar-event"></i> Создан: {{ document.created_at|date:"d.m.Y H:i" }}
+                {% if document.author %}
+                   | <i class="bi bi-person"></i> Автор: {{ document.author.username }}
+                {% endif %}
+                {% if document.updated_at|timesince:document.created_at != "0 минут" %} {# Проверка, было ли изменение #}
+                    | <i class="bi bi-clock-history"></i> Изменен: {{ document.updated_at|timesince }} назад
+                {% endif %}
+             </small>
+        </div>
+
+        <article class="document-content">
+            {{ document.content|linebreaksbr }} {# Используем linebreaksbr для сохранения переносов строк #}
+        </article>
+    </div>
+     <div class="card-footer text-end">
+         <a href="{% url 'document_list' %}" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-left"></i> Назад к списку</a>
+     </div>
+</div>
+
+{% endblock %}

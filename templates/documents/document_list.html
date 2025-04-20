@@ -1,0 +1,75 @@
+{# Путь: templates/documents/document_list.html #}
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Список документов{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Документы</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        {% if perms.documents.can_create_document %}
+            <a href="{% url 'document_create' %}" class="btn btn-success">
+                <i class="bi bi-plus-lg"></i> Создать документ
+            </a>
+         {% endif %}
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form method="get" class="d-flex">
+            <input type="text" name="q" class="form-control me-2" placeholder="Поиск по названию или содержанию..." value="{{ current_query }}">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+        </form>
+    </div>
+    <div class="col-md-6 d-flex justify-content-md-end align-items-center mt-2 mt-md-0">
+         <span class="me-2 text-muted small">Сортировать:</span>
+         <div class="btn-group btn-group-sm">
+            <a href="?q={{ current_query }}&sort=date" class="btn btn-outline-secondary {% if current_sort == 'date' %}active{% endif %}"><i class="bi bi-calendar-date"></i> По дате</a>
+            <a href="?q={{ current_query }}&sort=title" class="btn btn-outline-secondary {% if current_sort == 'title' %}active{% endif %}"><i class="bi bi-sort-alpha-down"></i> По названию</a>
+        </div>
+    </div>
+</div>
+
+
+{% if documents %}
+    <div class="list-group shadow-sm">
+        {% for doc in documents %}
+            <div class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                     <h5 class="mb-1"><a href="{{ doc.get_absolute_url }}" class="text-decoration-none">{{ doc.title }}</a></h5>
+                     <small class="text-muted">{{ doc.created_at|timesince }} назад</small>
+                </div>
+                 <p class="mb-1 text-muted small">
+                    <i class="bi bi-person"></i> Автор: {{ doc.author.username|default:"Система" }} |
+                    <i class="bi bi-clock"></i> Создан: {{ doc.created_at|date:"d.m.Y H:i" }}
+                 </p>
+                 {% if perms.documents.can_edit_document or perms.documents.can_delete_document %}
+                 <div class="mt-2">
+                    {% if perms.documents.can_edit_document %}
+                        <a href="{% url 'document_edit' doc.pk %}" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil-fill"></i> Редактировать</a>
+                    {% endif %}
+                    {% if perms.documents.can_delete_document %}
+                        <a href="{% url 'document_delete' doc.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash-fill"></i> Удалить</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    {% include "base.html" %} {# Временно включаем base.html для теста #}
+
+{% else %}
+    <div class="alert alert-secondary text-center" role="alert">
+      <i class="bi bi-info-circle me-1"></i> Документов пока нет.
+      {% if perms.documents.can_create_document %}
+        <a href="{% url 'document_create' %}" class="alert-link">Создать первый документ?</a>
+      {% endif %}
+    </div>
+{% endif %}
+
+{% endblock %}
