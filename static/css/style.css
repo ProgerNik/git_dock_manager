@@ -1,9 +1,7 @@
-/* Путь: static/css/style.css */
-
 /* Добавляем небольшой отступ сверху из-за фиксированной навигации */
 body {
-  padding-top: 70px; /* Немного больше 56px для запаса */
-  background-color: #f8f9fa; /* Светлый фон для всего сайта */
+  padding-top: 70px;
+  background-color: #f8f9fa;
 }
 
 /* Стиль для контейнера основного контента */
@@ -20,7 +18,7 @@ footer {
   padding-bottom: 2rem;
 }
 
-/* Кастомизация карточек Bootstrap */
+/* Кастомизация карточе */
 .card {
   margin-bottom: 1.5rem;
 }
@@ -31,27 +29,27 @@ footer {
     line-height: 1.6;
 }
 
-/* Улучшим вид полей формы с ошибками */
+
 .form-control.is-invalid, .was-validated .form-control:invalid {
-    border-color: #dc3545; /* Красная рамка */
+    border-color: #dc3545; /* Красня рамка */
 }
 .invalid-feedback {
-    color: #dc3545; /* Красный текст ошибки */
+    color: #dc3545;
 }
 
 /* Добавим иконки к кнопкам (через классы в HTML) */
 .btn .bi {
     vertical-align: text-bottom; /* Выравниваем иконку по тексту */
-    margin-right: .25rem; /* Небольшой отступ справа */
+    margin-right: .25rem;
 }
 
 /* Подсветка активной ссылки в пагинации */
 .pagination .page-item.active .page-link {
-    background-color: #0d6efd; /* Синий цвет Bootstrap */
+    background-color: #0d6efd;
     border-color: #0d6efd;
 }
 
-/* Стили для сообщений Django */
+
 .alert {
-    border-radius: .375rem; /* Немного скруглим углы */
+    border-radius: .375rem;
 }

@@ -8,9 +8,9 @@ class Document(models.Model):
     content = models.TextField()
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL, # Сохраняем документ, если автор удален
+        on_delete=models.SET_NULL,
         null=True,
-        blank=True, # Может быть создан админом без привязки к себе
+        blank=True,
         related_name='documents'
     )
     created_at = models.DateTimeField(auto_now_add=True)

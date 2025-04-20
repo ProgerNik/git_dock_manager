@@ -4,8 +4,7 @@ __pycache__/
 *$py.class
 
 # Virtualenv
-.venv/  # Или venv/, если твоя папка так называется
-env/
+.venv/  # Или venv/
 
 # Django
 *.log

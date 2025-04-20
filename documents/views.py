@@ -1,5 +1,3 @@
-# documents/views.py
-
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -7,7 +5,7 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 
 from .models import Document
-from .forms import DocumentForm # Убедись, что файл documents/forms.py тоже есть и содержит DocumentForm
+from .forms import DocumentForm
 
 class DocumentListView(ListView):
     model = Document
@@ -16,7 +14,6 @@ class DocumentListView(ListView):
     paginate_by = 10 # Количество документов на странице
 
     def get_queryset(self):
-        # Получаем базовый queryset
         queryset = super().get_queryset().select_related('author') # Оптимизация запроса автора
 
         # Получаем параметры поиска и сортировки из GET-запроса
@@ -60,10 +57,8 @@ class DocumentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
     model = Document
     form_class = DocumentForm
     template_name = 'documents/document_form.html'
-    permission_required = 'documents.can_create_document' # Право из модели Document
-    # success_url = reverse_lazy('document_list') # Можно и так, но get_absolute_url предпочтительнее
+    permission_required = 'documents.can_create_document'
 
-    # Автоматически устанавливаем автора при сохранении формы
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
@@ -73,26 +68,14 @@ class DocumentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
     model = Document
     form_class = DocumentForm
     template_name = 'documents/document_form.html'
-    permission_required = 'documents.can_edit_document' # Право из модели Document
-    # success_url = reverse_lazy('document_list') # get_absolute_url сработает
-    queryset = Document.objects.select_related('author').all() # Оптимизация
+    permission_required = 'documents.can_edit_document'
 
-    # Опционально: Дополнительная проверка, если редактировать может только автор
-    # def get_queryset(self):
-    #    queryset = super().get_queryset()
-    #    # Показываем только документы текущего пользователя для редактирования (если не суперюзер)
-    #    if not self.request.user.is_superuser:
-    #        return queryset.filter(author=self.request.user)
-    #    return queryset
+    queryset = Document.objects.select_related('author').all() # Оптимизация
 
 
 class DocumentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Document
     template_name = 'documents/document_confirm_delete.html'
-    success_url = reverse_lazy('document_list') # После удаления переходим на список
-    permission_required = 'documents.can_delete_document' # Право из модели Document
+    success_url = reverse_lazy('document_list')
+    permission_required = 'documents.can_delete_document'
     queryset = Document.objects.select_related('author').all() # Оптимизация
-
-    # Опционально: Аналогичная проверка как в UpdateView
-    # def get_queryset(self):
-    #    # ...

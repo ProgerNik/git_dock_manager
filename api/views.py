@@ -1,13 +1,9 @@
-# api/views.py
-
-from rest_framework import viewsets # <--- Добавь эту строку
-# from rest_framework import permissions # Это было закомментировано, но если будешь использовать кастомные, раскомментируй
+from rest_framework import viewsets
 from documents.models import Document
 from .serializers import DocumentSerializer
-# from .permissions import HasDocumentPermissionOrReadOnly # Для кастомного пермишена
 from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly # Для стандартного
 
-# Дальше идет твой класс DocumentViewSet без изменений
+
 class DocumentViewSet(viewsets.ModelViewSet):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
